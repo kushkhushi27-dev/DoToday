@@ -1,0 +1,8 @@
+{
+  "name": "TaskFlow",
+  "description": "A production-quality collaborative task management application built with Spring Boot, Spring Security, Spring Data JPA, MySQL, Thymeleaf, and REST APIs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

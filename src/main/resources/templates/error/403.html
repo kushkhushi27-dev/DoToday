@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Forbidden - TaskFlow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6 text-center">
+    <div class="max-w-md w-full bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-slate-900">403 - Access Forbidden</h1>
+        <p class="text-sm text-slate-600" th:text="${errorMessage != null ? errorMessage : 'You do not have permission to access this project or resource.'}">
+            Access denied.
+        </p>
+        <div class="pt-4">
+            <a th:href="@{/dashboard}"
+               class="inline-flex items-center px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors">
+                <i data-lucide="home" class="w-4 h-4 mr-1.5"></i>
+                Return to Dashboard
+            </a>
+        </div>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title>Projects - TaskFlow</title>
+</head>
+<body>
+    <div id="content" class="space-y-6">
+
+        <!-- Top Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900">Collaborative Projects</h2>
+                <p class="text-xs text-slate-500">Manage team initiatives, coordinate milestones, and assign members.</p>
+            </div>
+            <div>
+                <a th:href="@{/projects/new}"
+                   class="inline-flex items-center px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors">
+                    <i data-lucide="folder-plus" class="w-4 h-4 mr-1.5"></i>
+                    New Project
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div th:if="${#lists.isEmpty(projects)}" class="col-span-full bg-white p-12 rounded-xl border border-slate-200 text-center">
+                <i data-lucide="folder-kanban" class="w-12 h-12 mx-auto text-slate-300 mb-3"></i>
+                <h3 class="text-sm font-semibold text-slate-800">No projects yet</h3>
+                <p class="text-xs text-slate-500 mt-1">Start collaborating by creating your team's first project workspace.</p>
+                <div class="mt-4">
+                    <a th:href="@{/projects/new}"
+                       class="inline-flex items-center px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors">
+                        <i data-lucide="plus" class="w-3.5 h-3.5 mr-1.5"></i>
+                        Create First Project
+                    </a>
+                </div>
+            </div>
+
+            <!-- Project Card -->
+            <div th:each="project : ${projects}"
+                 class="bg-white rounded-xl border border-slate-200 shadow-sm hover:border-sky-300 hover:shadow-md transition-all flex flex-col justify-between overflow-hidden">
+                <div class="p-5 space-y-4 flex-1">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-3.5 h-3.5 rounded-md shrink-0" th:style="'background-color: ' + ${project.color}"></span>
+                            <a th:href="@{/projects/{id}(id=${project.id})}"
+                               class="text-base font-bold text-slate-900 hover:text-sky-600 transition-colors"
+                               th:text="${project.name}">Project Title</a>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed"
+                       th:text="${project.description != null && !project.description.isBlank() ? project.description : 'No project description.'}">
+                        Description
+                    </p>
+
+                    <!-- Progress Bar -->
+                    <div class="space-y-1.5 pt-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-slate-500 font-medium">Progress</span>
+                            <span class="font-bold text-slate-800" th:text="${project.progressPercentage + '%'}">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="h-2 rounded-full transition-all duration-300"
+                                 th:style="'width: ' + ${project.progressPercentage} + '%; background-color: ' + ${project.color}"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Footer: Stats & Link -->
+                <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                    <div class="flex items-center space-x-3">
+                        <span class="flex items-center" title="Project Members">
+                            <i data-lucide="users" class="w-3.5 h-3.5 mr-1 text-slate-400"></i>
+                            <span th:text="${project.memberCount}">1</span>
+                        </span>
+                        <span class="flex items-center" title="Total Tasks">
+                            <i data-lucide="check-square" class="w-3.5 h-3.5 mr-1 text-slate-400"></i>
+                            <span th:text="${project.completedTaskCount + '/' + project.taskCount}">0/0</span>
+                        </span>
+                    </div>
+
+                    <a th:href="@{/projects/{id}(id=${project.id})}"
+                       class="text-xs font-semibold text-sky-600 hover:text-sky-800 flex items-center">
+                        View Details
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>

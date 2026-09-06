@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - TaskFlow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="flex justify-center">
+            <div class="w-12 h-12 rounded-xl bg-sky-600 flex items-center justify-center text-white shadow-lg shadow-sky-600/30">
+                <i data-lucide="check-square" class="w-7 h-7"></i>
+            </div>
+        </div>
+        <h2 class="mt-4 text-center text-2xl font-bold tracking-tight text-slate-900">
+            Create your TaskFlow account
+        </h2>
+        <p class="mt-2 text-center text-sm text-slate-600">
+            Start collaborating with your team today
+        </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
+        <div class="bg-white py-8 px-6 shadow-sm border border-slate-200 rounded-xl sm:px-10">
+
+            <!-- Error banner -->
+            <div th:if="${errorMessage}"
+                 class="mb-4 bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-lg text-sm flex items-center space-x-2">
+                <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-rose-600"></i>
+                <span th:text="${errorMessage}">Registration error</span>
+            </div>
+
+            <!-- Registration Form -->
+            <form th:action="@{/register}" th:object="${user}" method="post" class="space-y-4">
+                <div>
+                    <label for="fullName" class="block text-sm font-medium text-slate-700">Full Name</label>
+                    <div class="mt-1">
+                        <input id="fullName" th:field="*{fullName}" type="text" required
+                               class="block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                               placeholder="Emily Watson">
+                    </div>
+                    <p th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="mt-1 text-xs text-rose-600"></p>
+                </div>
+
+                <div>
+                    <label for="username" class="block text-sm font-medium text-slate-700">Username</label>
+                    <div class="mt-1">
+                        <input id="username" th:field="*{username}" type="text" required
+                               class="block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                               placeholder="emily_w">
+                    </div>
+                    <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="mt-1 text-xs text-rose-600"></p>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-700">Email Address</label>
+                    <div class="mt-1">
+                        <input id="email" th:field="*{email}" type="email" required
+                               class="block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                               placeholder="emily@example.com">
+                    </div>
+                    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="mt-1 text-xs text-rose-600"></p>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+                    <div class="mt-1">
+                        <input id="password" th:field="*{password}" type="password" required
+                               class="block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                               placeholder="At least 6 characters">
+                    </div>
+                    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="mt-1 text-xs text-rose-600"></p>
+                </div>
+
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-slate-700">Confirm Password</label>
+                    <div class="mt-1">
+                        <input id="confirmPassword" th:field="*{confirmPassword}" type="password" required
+                               class="block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                               placeholder="Repeat your password">
+                    </div>
+                    <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="mt-1 text-xs text-rose-600"></p>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit"
+                            class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-sm text-slate-600">
+                    Already have an account?
+                    <a th:href="@{/login}" class="font-semibold text-sky-600 hover:text-sky-500">
+                        Sign in instead
+                    </a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

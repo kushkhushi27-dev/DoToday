@@ -1,0 +1,3 @@
+/app/applet/src/test/java/com/taskflow/service/UserServiceTest.java
+/app/applet/src/test/java/com/taskflow/controller/TaskRestControllerTest.java
+/app/applet/src/test/java/com/taskflow/service/TaskServiceTest.java
