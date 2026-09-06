@@ -3,19 +3,38 @@ import { getAuth, GoogleAuthProvider, Auth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, Firestore } from 'firebase/firestore';
 import firebaseAppletConfig from '../../firebase-applet-config.json';
 
-// Retrieve API key from Vite environment variable
+// Retrieve Firebase credentials from Vite environment variables (with fallback to firebase-applet-config.json)
 const envApiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+const envAuthDomain = import.meta.env.VITE_FIREBASE_AUTH_DOMAIN;
+const envProjectId = import.meta.env.VITE_FIREBASE_PROJECT_ID;
+const envStorageBucket = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET;
+const envMessagingSenderId = import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID;
+const envAppId = import.meta.env.VITE_FIREBASE_APP_ID;
+const envMeasurementId = import.meta.env.VITE_FIREBASE_MEASUREMENT_ID;
+
+// Combined Firebase configuration
+export const firebaseConfig = {
+  apiKey: envApiKey || firebaseAppletConfig.apiKey || '',
+  authDomain: envAuthDomain || firebaseAppletConfig.authDomain || '',
+  projectId: envProjectId || firebaseAppletConfig.projectId || '',
+  storageBucket: envStorageBucket || firebaseAppletConfig.storageBucket || '',
+  messagingSenderId: envMessagingSenderId || firebaseAppletConfig.messagingSenderId || '',
+  appId: envAppId || firebaseAppletConfig.appId || '',
+  measurementId: envMeasurementId || firebaseAppletConfig.measurementId || '',
+  firestoreDatabaseId: firebaseAppletConfig.firestoreDatabaseId || '(default)',
+};
+
+// Check whether configuration has placeholder values
+export const isPlaceholderConfig =
+  firebaseConfig.authDomain === 'dotoday-app.firebaseapp.com' ||
+  firebaseConfig.projectId === 'dotoday-app';
 
 // If VITE_FIREBASE_API_KEY is missing, export a firebaseConfigError string
-export const firebaseConfigError: string | null = !envApiKey
-  ? 'VITE_FIREBASE_API_KEY is missing. Please define it in your .env file or environment variables.'
+export const firebaseConfigError: string | null = !firebaseConfig.apiKey
+  ? 'VITE_FIREBASE_API_KEY is missing. Please define your Firebase credentials in your .env.local file.'
+  : isPlaceholderConfig
+  ? 'Firebase AuthDomain is using the placeholder "dotoday-app.firebaseapp.com". To fix Google OAuth redirect_uri_mismatch, please add your real Firebase credentials in .env.local.'
   : null;
-
-// Firebase configuration loaded from JSON file + VITE_FIREBASE_API_KEY env var
-const firebaseConfig = {
-  ...firebaseAppletConfig,
-  apiKey: envApiKey || firebaseAppletConfig.apiKey || '',
-};
 
 // Singleton pattern: getApps().length ? getApp() : initializeApp(config)
 export const app: FirebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);

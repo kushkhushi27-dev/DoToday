@@ -1,313 +1,200 @@
-# DoToday - Collaborative Task Management System
+# DoToday - Modern Collaborative Task & Project Management
 
-A production-grade, full-stack collaborative task management application built with **React 19**, **TypeScript**, **Vite**, **Firebase/Firestore**, **Firebase Authentication**, and **Vercel** for serverless deployment.
+A high-performance, full-stack collaborative task and workspace management application built with **React 19**, **TypeScript**, **Vite**, **Tailwind CSS**, **Firebase Authentication**, and **Cloud Firestore**.
 
-Designed with clean component architecture, real-time database updates, modern security patterns (Firebase Auth), and optimized for rapid deployment to Vercel & Render.
+Designed with modern component architecture, real-time database subscriptions, smooth dark/light theme switching, and a frictionless **Guest Exploration Mode** that allows visitors to tour the app before signing in.
 
 ---
 
 ## 🚀 Key Features
 
-### 1. User Authentication & Authorization
-- **Session-Based Authentication**: Secure stateful session management with HTTP-only cookies and CSRF protection.
-- **BCrypt Encryption**: Passwords securely hashed with BCrypt (10 rounds).
-- **Role-Based Access Control (RBAC)**: Fine-grained authorization using `ROLE_USER` and `ROLE_ADMIN`.
-- **Dual Credential Login**: Users can sign in using either their username or email address.
-- **Pre-seeded Demo Accounts**: 1-click test credentials on login page for instant preview.
+### 1. Guest Exploration & Frictionless Onboarding
+- **Instant Preview**: Visitors can immediately explore the dashboard, Kanban board, project workspaces, calendar, and analytics without having to log in first.
+- **Contextual Auth Interception**: When a guest attempts to create, update, delete, or comment, a non-intrusive Google Authentication modal appears seamlessly.
+- **Enterprise Google OAuth 2.0**: One-click Google sign-in with automatic profile synchronization to Cloud Firestore. Zero passwords to store or manage.
 
-### 2. Task Management
-- **Task Lifecycle**: Create, update, view, and delete tasks with instant status toggling.
-- **Priority Matrix**: `LOW`, `MEDIUM`, and `HIGH` priority classifications with color-coded badges.
-- **Workflow Statuses**: `TODO`, `IN_PROGRESS`, and `COMPLETED` states with automated completion timestamps.
-- **Deadlines & Overdue Detection**: Due dates with automatic overdue calculations and "Due Today" highlights.
-- **Rich Search & Filters**: Filter tasks dynamically by keyword (title/description/tags), priority, workflow status, and project.
-- **Multi-Field Sorting**: Sort tasks by deadline (ASC/DESC), priority, created date, or title.
+### 2. Task Management & Productivity
+- **Complete Task Lifecycle**: Create, edit, assign, prioritize, and toggle completion with instant UI feedback.
+- **Priority & Status Tracking**: Classify by `LOW`, `MEDIUM`, and `HIGH` priority with visual color badges; progress through `TODO`, `IN_PROGRESS`, and `COMPLETED`.
+- **Due Date Tracking**: Automated overdue detection and "Due Today" badges.
+- **Dynamic Search & Multi-Field Sorting**: Search across task titles, descriptions, and tags; sort by deadline, priority, created date, or title.
 
-### 3. Collaborative Projects
-- **Team Workspaces**: Create initiatives with custom color accents, goals, and descriptions.
-- **Member Management**: Add team members via username or email with project roles (`LEAD`, `MEMBER`).
-- **Task Delegation**: Assign tasks to team members with visual avatar identifiers.
-- **Interactive Discussions**: Threaded comments on tasks with relative timestamps and author initials.
-- **Audit Trails & Activity Logs**: Full historical log tracking task creation, assignments, completions, and member updates.
+### 3. Interactive Kanban Board
+- **Three-Stage Workflow**: Dedicated columns for `To Do`, `In Progress`, and `Completed`.
+- **Drag & Drop**: Native drag-and-drop task status updates with persistent Firestore synchronization.
+- **Quick Shift Controls**: Responsive directional controls for rapid status progression on desktop and mobile devices.
 
-### 4. Interactive Kanban Board
-- **Three-Stage Columns**: Visual columns for `To Do`, `In Progress`, and `Completed`.
-- **Drag & Drop**: Native HTML5 drag-and-drop integrated with background status update APIs (`PATCH /api/tasks/{id}/status`).
-- **Quick Shift Controls**: Responsive directional controls for instant keyboard/touch status transitions.
-- **Project Filter**: Focus the board on individual projects or view across all accessible workspaces.
+### 4. Collaborative Projects & Workspaces
+- **Project Isolation**: Group tasks by project with custom color themes, descriptions, and milestones.
+- **Member Delegation**: Assign tasks to team members with visual avatar identifiers and initials.
+- **Threaded Discussions**: Add comments and notes to specific tasks with relative timestamps.
+- **Audit Trails**: Live activity stream capturing task creations, status transitions, assignments, and updates.
 
-### 5. Analytics & Dashboard Metrics
-- **Real-Time KPIs**: Total tasks, completed tasks, pending tasks, overdue tasks, high-priority tasks, and tasks due today.
-- **Progress Gauge**: Visual progress bar showing percentage completion across active projects.
-- **High Priority Action Queue**: Direct access to urgent tasks requiring immediate attention.
-- **Live Activity Stream**: Real-time audit feed of recent team actions.
-
-### 6. REST API Endpoints
-Comprehensive RESTful API for external client integration:
-- `GET /api/tasks` — List tasks with search, filter, and sort parameters
-- `POST /api/tasks` — Create new task (JSON payload with validation)
-- `GET /api/tasks/{id}` — Retrieve detailed task DTO
-- `PUT /api/tasks/{id}` — Update existing task
-- `PATCH /api/tasks/{id}/status` — Update task status
-- `DELETE /api/tasks/{id}` — Delete task
-- `GET /api/tasks/{id}/comments` — List comments for task
-- `POST /api/tasks/{id}/comments` — Add comment to task
-- `GET /api/projects` — List accessible projects
-- `POST /api/projects` — Create new project
-- `POST /api/projects/{id}/members` — Add member to project
-- `GET /api/dashboard/stats` — Retrieve analytics and metrics payload
+### 5. Analytics & Calendar
+- **Real-Time KPIs**: Total tasks, completion rate, overdue warnings, high-priority counts, and tasks due today.
+- **Interactive Calendar View**: Month-by-month grid displaying scheduled tasks and deadlines.
+- **Theme Support**: Seamless dark mode and light mode toggling with persistent preferences.
+- **PWA Ready**: Complete high-resolution favicon suite and Web App Manifest (`site.webmanifest`).
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer | Technology | Purpose |
+| Layer | Technology | Description |
 |---|---|---|
-| **Frontend** | React 19 + TypeScript | Modern, type-safe UI framework |
-| **Build Tool** | Vite | Lightning-fast frontend bundler |
-| **Styling** | Tailwind CSS | Utility-first CSS framework |
-| **Icons** | Lucide Icons | Clean SVG vector iconography |
-| **Backend** | Firebase | Serverless, fully managed cloud platform |
-| **Database** | Firestore (NoSQL) | Scalable, real-time cloud database |
-| **Authentication** | Firebase Auth | Built-in user authentication & session management |
-| **Hosting** | Vercel | Global edge-optimized static hosting |
-| **Deployment** | Render / Firebase Hosting | Backend-as-a-service alternatives |
+| **Frontend UI** | React 19 + TypeScript | Component-based, fully type-safe user interface |
+| **Bundler & Tooling** | Vite 6 | Lightning-fast HMR and optimized production bundling |
+| **Styling** | Tailwind CSS | Modern utility-first styling with dark mode support |
+| **Icons** | Lucide React | High-performance SVG iconography |
+| **Authentication** | Firebase Auth | Secure OAuth 2.0 Google sign-in & session management |
+| **Database** | Cloud Firestore | Real-time NoSQL cloud database with document security |
+| **Deployment** | Vercel / Netlify / Render | Edge-optimized static hosting with automated CI/CD |
 
 ---
 
-## 📐 Architecture Overview
+## 📐 Project Structure
 
 ```
-src/
-├── components/          # React components (UI views)
-├── config/              # Firebase configuration
-├── services/            # Firebase services (auth, Firestore)
-│   ├── authService.ts   # Authentication logic
-│   └── firestoreService.ts  # Database operations
-├── data/                # Mock data for development/demo
-├── types/               # TypeScript type definitions
-├── App.tsx              # Main application component
-├── main.tsx             # React entry point
-└── index.css            # Global styles
+DoToday/
+├── public/                  # Static assets & PWA suite
+│   ├── favicon.svg          # Modern SVG icon
+│   ├── favicon.ico          # Legacy multi-res ICO
+│   ├── favicon-96x96.png    # High-DPI favicon
+│   ├── apple-touch-icon.png # iOS home screen icon
+│   └── site.webmanifest     # PWA manifest
+├── src/
+│   ├── components/          # Modular React components
+│   │   ├── ActivityView.tsx     # Recent activity logs feed
+│   │   ├── AnalyticsView.tsx    # Productivity charts & KPIs
+│   │   ├── AuthModal.tsx        # Contextual Google login modal
+│   │   ├── CalendarView.tsx     # Calendar schedule view
+│   │   ├── DashboardView.tsx    # Main KPI dashboard
+│   │   ├── Header.tsx           # Global app navigation & user profile
+│   │   ├── KanbanBoard.tsx      # Drag-and-drop Kanban workflow
+│   │   ├── ProjectList.tsx      # Project workspaces grid
+│   │   ├── Sidebar.tsx          # Collapsible navigation drawer
+│   │   ├── TaskList.tsx         # Filterable & sortable task table
+│   │   └── ...                  # Modals & UI utilities
+│   ├── context/             # Global React Context providers
+│   │   ├── AuthContext.tsx      # Firebase Auth state & user profile sync
+│   │   └── ThemeContext.tsx     # Dark/Light theme state
+│   ├── data/                # Mock & fallback demo datasets
+│   │   └── guestDemoData.ts     # Curated demo data for Guest Mode
+│   ├── lib/                 # Core infrastructure
+│   │   └── firebase.ts          # Firebase SDK initialization & validation
+│   ├── services/            # Firestore data access services
+│   │   └── firestoreService.ts  # CRUD operations for tasks, projects & logs
+│   ├── types/               # TypeScript interfaces & domain types
+│   ├── App.tsx              # Root app component & state orchestration
+│   ├── index.css            # Tailwind directives & theme styles
+│   └── main.tsx             # Application entry point
+├── .env.example             # Environment configuration template
+├── firestore.rules          # Cloud Firestore security rules
+├── index.html               # Main HTML document with SEO & PWA tags
+├── package.json             # Dependencies and build scripts
+├── tsconfig.json            # TypeScript compiler configuration
+├── vercel.json              # Vercel deployment routing configuration
+└── vite.config.ts           # Vite bundler configuration
 ```
 
 ---
 
-## 🔑 Authentication
+## ⚡ Quick Start & Local Development
 
-**DoToday uses Firebase Google Authentication - no demo accounts are available.**
+### 1. Prerequisites
+- **Node.js**: v18.0 or newer (v20+ recommended)
+- **npm**: v9 or newer
+- **Firebase Account**: Free tier at [firebase.google.com](https://firebase.google.com)
 
-Users must:
-1. Sign up with their Google account
-2. Complete Firebase authentication
-3. Access the app with their authenticated Google account
-
-This provides:
-- ✅ Secure OAuth 2.0 authentication via Google
-- ✅ No password storage or management required
-- ✅ Automatic user profile creation on first login
-- ✅ Session persistence via Firebase
-
----
-
-## ⚡ Setup & Run Instructions
-
-### Local Development
-
-#### 1. Prerequisites
-- Node.js 18+
-- npm or yarn
-- Firebase account (free tier available at [firebase.google.com](https://firebase.google.com))
-
-#### 2. Firebase Project Setup with Google Auth
-
-1. **Create a Firebase Project**:
-   - Go to [firebase.google.com](https://firebase.google.com)
-   - Click "Create Project" and name it "DoToday"
-   - Enable Google Analytics (optional)
-
-2. **Enable Firestore Database**:
-   - In Firebase Console → "Firestore Database"
-   - Click "Create database"
-   - Start in **Test Mode** (for development)
-   - Select a region (e.g., `us-east1`)
-   - Click "Enable"
-
-3. **Enable Google Authentication**:
-   - Go to "Authentication" → "Sign-in method"
-   - Click "Google"
-   - Click "Enable"
-   - Fill in **Project support email** (required)
-   - Click "Save"
-
-4. **Get Firebase Web App Credentials**:
-   - Go to Project Settings ⚙️ → "General"
-   - Scroll down to "Your apps"
-   - Click "Web" (`</>`)
-   - Copy your config object
-
-5. **Firestore Security Rules** (Important!):
-   - Go to Firestore Database → "Rules"
-   - The app includes security rules in `firestore.rules`
-   - For production, update to Production Mode rules
-   - For development, you can use Test Mode (less restrictive)
-
-#### 3. Environment Variables
-
-Create a `.env.local` file in the project root (copy from `.env.example`):
-
+### 2. Installation
+Clone the repository and install dependencies:
 ```bash
-VITE_FIREBASE_API_KEY=YOUR_API_KEY
-VITE_FIREBASE_AUTH_DOMAIN=YOUR_AUTH_DOMAIN
-VITE_FIREBASE_PROJECT_ID=YOUR_PROJECT_ID
-VITE_FIREBASE_STORAGE_BUCKET=YOUR_STORAGE_BUCKET
-VITE_FIREBASE_MESSAGING_SENDER_ID=YOUR_SENDER_ID
-VITE_FIREBASE_APP_ID=YOUR_APP_ID
-```
-
-Find these values in Firebase Console → Project Settings → Web App section.
-
-#### 4. Install Dependencies & Run
-
-```bash
-# Install npm dependencies
+git clone https://github.com/your-username/DoToday.git
+cd DoToday
 npm install
-
-# Start development server (runs on http://localhost:5173)
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
 ```
 
----
-
-### Deployment to Vercel
-
-#### 1. Connect GitHub Repository
-
-1. Push your code to GitHub
-2. Go to [vercel.com](https://vercel.com) and sign up/login
-3. Click "New Project" → "Import Git Repository"
-3. Select your DoToday repository
-
-#### 2. Set Environment Variables in Vercel
-
-1. In Vercel Project Settings → "Environment Variables"
-2. Add all Firebase credentials:
-   - `VITE_FIREBASE_API_KEY`
-   - `VITE_FIREBASE_AUTH_DOMAIN`
-   - `VITE_FIREBASE_PROJECT_ID`
-   - `VITE_FIREBASE_STORAGE_BUCKET`
-   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
-   - `VITE_FIREBASE_APP_ID`
-
-#### 3. Deploy
-
-- Vercel automatically deploys on every git push
-- Your app will be live at: `https://dotoday-{your-account}.vercel.app`
-
----
-
-### Alternative: Deploy to Render or Firebase Hosting
-
-#### Firebase Hosting
-
+### 3. Configure Environment Variables
+Create a local `.env.local` file from the provided template:
 ```bash
-# Install Firebase CLI
-npm install -g firebase-tools
-
-# Login to Firebase
-firebase login
-
-# Initialize Firebase
-firebase init
-
-# Deploy
-firebase deploy
+cp .env.example .env.local
 ```
 
-#### Render
+Open `.env.local` and add your Firebase web credentials from the [Firebase Console](https://console.firebase.google.com/) (*Project Settings > General > Your Apps > Web App*):
 
-1. Create account at [render.com](https://render.com)
-2. Connect GitHub repo
-3. Create "Static Site" service
-4. Set build command: `npm run build`
-5. Set publish directory: `dist`
-6. Add environment variables
-7. Deploy
+```env
+VITE_FIREBASE_API_KEY=your-firebase-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+VITE_FIREBASE_APP_ID=1:your-messaging-sender-id:web:your-web-app-id
+```
+
+> [!NOTE]
+> `.env.local` is strictly ignored by `.gitignore` to prevent any sensitive API keys or project identifiers from being committed to source control.
+
+### 4. Start Development Server
+```bash
+npm run dev
+```
+The application will launch at `http://localhost:3000` (or `http://localhost:5173`).
 
 ---
 
-## 🔐 Firestore Security Rules
+## 🔒 Firebase Configuration & Security
 
-The project includes `firestore.rules` with security rules:
-- Users can only access/modify their own data
-- Projects require member authorization
-- Tasks are protected with creator/assignee checks
-- Comments are read-only for non-authors
+### 1. Enable Google Authentication
+1. In the Firebase Console, navigate to **Build > Authentication > Sign-in method**.
+2. Click **Add new provider** and select **Google**.
+3. Enable the provider, select your project support email, and save.
+4. Under **Settings > Authorized domains**, ensure your local domain (`localhost`) and production domain (e.g. `your-app.vercel.app`) are listed.
 
-**Deploy rules to production:**
+### 2. Firestore Security Rules
+The repository includes production-ready Firestore rules in `firestore.rules`.
+- Read access is enabled for authenticated users on authorized collections.
+- Write access requires authenticated identity matching (`request.auth.uid == resource.data.userId` or project membership).
 
+Deploy the rules using the Firebase CLI:
 ```bash
 firebase deploy --only firestore:rules
 ```
 
 ---
 
-## 📝 Key Differences from Spring Boot Version
+## 🚢 Production Deployment
 
-| Aspect | Spring Boot | Firebase/Vercel |
-|---|---|---|
-| **Backend** | Java server | Serverless functions |
-| **Database** | MySQL/MariaDB | Firestore (NoSQL) |
-| **Deployment** | Render + Backend setup | Vercel (fronted) + Firebase (backend) |
-| **Authentication** | Spring Security | Firebase Auth |
-| **Cost** | Server rental | Pay-per-use (usually free tier covers demo) |
-| **Scalability** | Manual | Auto-scaling |
+### Deploying to Vercel (Recommended)
+1. Push your repository to GitHub.
+2. In [Vercel](https://vercel.com), import your `DoToday` repository.
+3. Configure the **Environment Variables** in Vercel with your Firebase configuration keys:
+   - `VITE_FIREBASE_API_KEY`
+   - `VITE_FIREBASE_AUTH_DOMAIN`
+   - `VITE_FIREBASE_PROJECT_ID`
+   - `VITE_FIREBASE_STORAGE_BUCKET`
+   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+   - `VITE_FIREBASE_APP_ID`
+4. Click **Deploy**. Vercel will build and deploy the app with automatic SSL and global CDN caching.
 
----
-
-## 🚀 Production Checklist
-
-- [ ] Enable Firebase security rules (move to Production mode)
-- [ ] Set up Firebase backup & restore
-- [ ] Configure domain name
-- [ ] Enable HTTPS (automatic on Vercel & Firebase)
-- [ ] Set up monitoring & alerts
-- [ ] Configure email verification
-- [ ] Add password reset flow
-- [ ] Implement activity logging
+### Deploying to Firebase Hosting
+```bash
+npm run build
+firebase init hosting
+firebase deploy --only hosting
+```
 
 ---
 
-## ⚡ Setup & Run Instructions - Local Development
+## 🧪 Build & Linting Verification
 
-### 1. Prerequisites
-- Node.js 18+
-- npm or yarn
-- Firebase account (free tier available at [firebase.google.com](https://firebase.google.com))
+Run TypeScript compilation and production packaging:
+```bash
+# Typecheck TypeScript source
+npm run lint
 
-### 2. Firebase Project Setup
+# Build production bundle to dist/
+npm run build
 
-1. **Create a Firebase Project**:
-   - Go to [Google Cloud Console](https://console.firebase.google.com)
-   - Click "Create Project"
-   - Name it "TaskFlow" and create
-
-2. **Enable Firestore Database**:
-   - In Firebase Console, select "Firestore Database"
-   - Click "Create database"
-   - Start in **Test Mode** (for development)
-   - Select a region (e.g., `us-east1`)
-
-3. **Enable Authentication**:
-   - Go to "Authentication" → "Sign-in method"
-   - Enable **Email/Password**
-
-4. **Get Project Credentials**:
-   - Go to Project Settings ⚙️ → "General"
-   - Scroll to "Your apps" and select Web (`</>`)
+# Preview production bundle locally
+npm run preview
+```

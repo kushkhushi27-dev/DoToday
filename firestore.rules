@@ -2,48 +2,91 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // User documents - only accessible by the user themselves
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidTaskPriority(priority) {
+      return priority in ['LOW', 'MEDIUM', 'HIGH'];
+    }
+
+    function isValidTaskStatus(status) {
+      return status in ['TODO', 'IN_PROGRESS', 'COMPLETED'];
+    }
+
+    // Personal user documents: only that user can read, create, update, or delete
     match /users/{userId} {
-      allow read, write: if request.auth.uid == userId;
-      allow read: if request.auth.uid != null; // Anyone authenticated can read user profiles
+      allow read, create, update, delete: if isOwner(userId);
+
+      // Personal user tasks under /users/{userId}/tasks/{taskId}
+      match /tasks/{taskId} {
+        allow read: if isOwner(userId);
+        
+        allow create: if isOwner(userId)
+          && request.resource.data.userId == userId
+          && request.resource.data.title is string
+          && request.resource.data.title.size() > 0
+          && request.resource.data.title.size() <= 200
+          && (!('description' in request.resource.data) || request.resource.data.description.size() <= 2000)
+          && (!('priority' in request.resource.data) || isValidTaskPriority(request.resource.data.priority))
+          && (!('status' in request.resource.data) || isValidTaskStatus(request.resource.data.status));
+
+        allow update: if isOwner(userId)
+          && request.resource.data.userId == resource.data.userId
+          && (!('createdAt' in resource.data) || request.resource.data.createdAt == resource.data.createdAt)
+          && request.resource.data.title is string
+          && request.resource.data.title.size() > 0
+          && request.resource.data.title.size() <= 200
+          && (!('description' in request.resource.data) || request.resource.data.description.size() <= 2000)
+          && (!('priority' in request.resource.data) || isValidTaskPriority(request.resource.data.priority))
+          && (!('status' in request.resource.data) || isValidTaskStatus(request.resource.data.status));
+
+        allow delete: if isOwner(userId);
+      }
+
+      // Any other personal subcollections (projects, settings, notifications, activities, comments)
+      match /{subcollection}/{docId} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
-    // Tasks - accessible by project members
+    // Top-level collaborative workspace tasks
     match /tasks/{taskId} {
-      allow read: if request.auth.uid != null;
-      allow create: if request.auth.uid != null && 
-                       request.resource.data.createdBy == request.auth.uid;
-      allow update: if request.auth.uid != null &&
-                       (resource.data.createdBy == request.auth.uid ||
-                        resource.data.assignedTo == request.auth.uid);
-      allow delete: if request.auth.uid != null &&
-                       resource.data.createdBy == request.auth.uid;
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.createdBy == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        resource.data.assignedTo == request.auth.uid
+      );
+      allow delete: if isAuthenticated() && resource.data.createdBy == request.auth.uid;
     }
 
-    // Projects - accessible by members
+    // Top-level collaborative projects
     match /projects/{projectId} {
-      allow read: if request.auth.uid != null &&
-                     request.auth.uid in resource.data.members;
-      allow create: if request.auth.uid != null;
-      allow update: if request.auth.uid != null &&
-                       request.auth.uid in resource.data.members;
-      allow delete: if request.auth.uid != null &&
-                       request.auth.uid in resource.data.createdBy;
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated() && (
+        !('createdBy' in resource.data) || resource.data.createdBy == request.auth.uid
+      );
     }
 
-    // Comments - accessible by authenticated users
+    // Top-level comments
     match /comments/{commentId} {
-      allow read: if request.auth.uid != null;
-      allow create: if request.auth.uid != null &&
-                       request.resource.data.authorId == request.auth.uid;
-      allow delete: if request.auth.uid != null &&
-                       resource.data.authorId == request.auth.uid;
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.authorId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.authorId == request.auth.uid;
     }
 
-    // Activity logs - read-only for all authenticated users
+    // Top-level activity logs
     match /activities/{activityId} {
-      allow read: if request.auth.uid != null;
-      allow create: if request.auth.uid != null;
+      allow read, create: if isAuthenticated();
     }
   }
 }

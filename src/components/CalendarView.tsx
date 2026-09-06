@@ -32,7 +32,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   const startDayOffset = 1; // Tuesday
   const todayNum = 5;
 
-  const getProjectById = (id: number | null) => projects.find((p) => p.id === id);
+  const getProjectById = (id: number | string | null) => projects.find((p) => p.id === id);
 
   // Group tasks by day in September 2026
   const tasksByDay: { [day: number]: Task[] } = {};

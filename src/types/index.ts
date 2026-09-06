@@ -1,10 +1,11 @@
 export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH';
 export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'COMPLETED';
-export type UserRole = 'ROLE_USER' | 'ROLE_ADMIN';
+export type UserRole = 'ROLE_USER' | 'ROLE_ADMIN' | 'ROLE_GUEST';
 export type NavTab = 'dashboard' | 'my-tasks' | 'projects' | 'kanban' | 'calendar' | 'analytics' | 'activity';
 
 export interface User {
   id: number;
+  uid?: string;
   username: string;
   email: string;
   fullName: string;

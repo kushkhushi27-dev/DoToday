@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="dotoday-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+  </defs>
+  <!-- Rounded Squircle Icon Container -->
+  <rect width="64" height="64" rx="16" fill="url(#dotoday-grad)" />
+  <!-- Subtle inner border highlight -->
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+  <!-- Crisp white Checkmark -->
+  <path d="M19 33.5 L27 41.5 L45 23.5" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

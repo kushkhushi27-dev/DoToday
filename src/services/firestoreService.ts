@@ -12,7 +12,7 @@ import {
   QueryConstraint,
   writeBatch,
 } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db } from '../lib/firebase';
 import { Task, Project, TaskComment, ActivityLog } from '../types';
 
 // ===== TASKS =====
@@ -38,7 +38,7 @@ export async function getTasks(filters?: {
     return snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    })) as Task[];
+    })) as unknown as Task[];
   } catch (error: any) {
     throw new Error(`Failed to fetch tasks: ${error.message}`);
   }
@@ -47,7 +47,7 @@ export async function getTasks(filters?: {
 export async function getTaskById(taskId: string): Promise<Task | null> {
   try {
     const taskDoc = await getDoc(doc(db, 'tasks', taskId));
-    return taskDoc.exists() ? ({ id: taskDoc.id, ...taskDoc.data() } as Task) : null;
+    return taskDoc.exists() ? ({ id: taskDoc.id, ...taskDoc.data() } as unknown as Task) : null;
   } catch (error: any) {
     throw new Error(`Failed to fetch task: ${error.message}`);
   }
@@ -57,9 +57,9 @@ export async function createTask(task: Omit<Task, 'id'>): Promise<Task> {
   try {
     const docRef = await addDoc(collection(db, 'tasks'), {
       ...task,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     });
-    return { id: docRef.id, ...task, createdAt: new Date() } as Task;
+    return { id: docRef.id, ...task, createdAt: new Date().toISOString() } as unknown as Task;
   } catch (error: any) {
     throw new Error(`Failed to create task: ${error.message}`);
   }
@@ -70,7 +70,7 @@ export async function updateTask(taskId: string, updates: Partial<Task>): Promis
     const taskRef = doc(db, 'tasks', taskId);
     await updateDoc(taskRef, {
       ...updates,
-      updatedAt: new Date(),
+      updatedAt: new Date().toISOString(),
     });
   } catch (error: any) {
     throw new Error(`Failed to update task: ${error.message}`);
@@ -104,7 +104,7 @@ export async function getProjects(userId?: string): Promise<Project[]> {
     return snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    })) as Project[];
+    })) as unknown as Project[];
   } catch (error: any) {
     throw new Error(`Failed to fetch projects: ${error.message}`);
   }
@@ -113,7 +113,7 @@ export async function getProjects(userId?: string): Promise<Project[]> {
 export async function getProjectById(projectId: string): Promise<Project | null> {
   try {
     const projectDoc = await getDoc(doc(db, 'projects', projectId));
-    return projectDoc.exists() ? ({ id: projectDoc.id, ...projectDoc.data() } as Project) : null;
+    return projectDoc.exists() ? ({ id: projectDoc.id, ...projectDoc.data() } as unknown as Project) : null;
   } catch (error: any) {
     throw new Error(`Failed to fetch project: ${error.message}`);
   }
@@ -123,9 +123,9 @@ export async function createProject(project: Omit<Project, 'id'>): Promise<Proje
   try {
     const docRef = await addDoc(collection(db, 'projects'), {
       ...project,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     });
-    return { id: docRef.id, ...project, createdAt: new Date() } as Project;
+    return { id: docRef.id, ...project, createdAt: new Date().toISOString() } as unknown as Project;
   } catch (error: any) {
     throw new Error(`Failed to create project: ${error.message}`);
   }
@@ -136,7 +136,7 @@ export async function updateProject(projectId: string, updates: Partial<Project>
     const projectRef = doc(db, 'projects', projectId);
     await updateDoc(projectRef, {
       ...updates,
-      updatedAt: new Date(),
+      updatedAt: new Date().toISOString(),
     });
   } catch (error: any) {
     throw new Error(`Failed to update project: ${error.message}`);
@@ -150,7 +150,7 @@ export async function deleteProject(projectId: string): Promise<void> {
     const batch = writeBatch(db);
 
     tasks.forEach(task => {
-      batch.delete(doc(db, 'tasks', task.id));
+      batch.delete(doc(db, 'tasks', String(task.id)));
     });
 
     batch.delete(doc(db, 'projects', projectId));
@@ -173,7 +173,7 @@ export async function getTaskComments(taskId: string): Promise<TaskComment[]> {
     return snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    })) as TaskComment[];
+    })) as unknown as TaskComment[];
   } catch (error: any) {
     throw new Error(`Failed to fetch comments: ${error.message}`);
   }
@@ -183,9 +183,9 @@ export async function addComment(comment: Omit<TaskComment, 'id'>): Promise<Task
   try {
     const docRef = await addDoc(collection(db, 'comments'), {
       ...comment,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     });
-    return { id: docRef.id, ...comment, createdAt: new Date() } as TaskComment;
+    return { id: docRef.id, ...comment, createdAt: new Date().toISOString() } as unknown as TaskComment;
   } catch (error: any) {
     throw new Error(`Failed to add comment: ${error.message}`);
   }
@@ -211,7 +211,7 @@ export async function getActivityLogs(limit: number = 50): Promise<ActivityLog[]
     return snapshot.docs.slice(0, limit).map(doc => ({
       id: doc.id,
       ...doc.data(),
-    })) as ActivityLog[];
+    })) as unknown as ActivityLog[];
   } catch (error: any) {
     throw new Error(`Failed to fetch activity logs: ${error.message}`);
   }
@@ -221,9 +221,9 @@ export async function logActivity(activity: Omit<ActivityLog, 'id'>): Promise<Ac
   try {
     const docRef = await addDoc(collection(db, 'activities'), {
       ...activity,
-      timestamp: new Date(),
+      createdAt: new Date().toISOString(),
     });
-    return { id: docRef.id, ...activity, timestamp: new Date() } as ActivityLog;
+    return { id: docRef.id, ...activity, createdAt: new Date().toISOString() } as unknown as ActivityLog;
   } catch (error: any) {
     throw new Error(`Failed to log activity: ${error.message}`);
   }

@@ -166,7 +166,7 @@ Make sure your `.env.local` file looks like this (with your actual values):
 
 ```bash
 # Copy these from Firebase Console → Project Settings → Web App
-VITE_FIREBASE_API_KEY=AIzaSyDxxx...
+VITE_FIREBASE_API_KEY=your-firebase-api-key
 VITE_FIREBASE_AUTH_DOMAIN=dotoday-xxx.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=dotoday-xxx
 VITE_FIREBASE_STORAGE_BUCKET=dotoday-xxx.appspot.com

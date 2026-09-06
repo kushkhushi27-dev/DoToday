@@ -1,6 +1,6 @@
 {
   "name": "DoToday",
-  "description": "A production-quality collaborative task management application built with Spring Boot, Spring Security, Spring Data JPA, MySQL, Thymeleaf, and REST APIs.",
+  "description": "A modern collaborative task management application built with React 19, TypeScript, Vite, Tailwind CSS, Firebase Auth, and Cloud Firestore.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
