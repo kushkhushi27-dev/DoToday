@@ -1,6 +1,8 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   User as FirebaseUser,
@@ -16,6 +18,8 @@ export interface AuthCredentials {
   password: string;
   username?: string;
 }
+
+const googleProvider = new GoogleAuthProvider();
 
 /**
  * Register a new user
@@ -108,5 +112,44 @@ export async function getUserProfile(userId: string): Promise<User | null> {
     return userDoc.exists() ? (userDoc.data() as User) : null;
   } catch (error: any) {
     throw new Error(error.message || 'Failed to fetch user profile');
+  }
+}
+
+/**
+ * Sign in with Google
+ */
+export async function signInWithGoogle(): Promise<User> {
+  try {
+    // Set session persistence
+    await setPersistence(auth, browserSessionPersistence);
+
+    const result = await signInWithPopup(auth, googleProvider);
+    const firebaseUser = result.user;
+
+    // Check if user already exists in Firestore
+    let userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+
+    if (!userDoc.exists()) {
+      // Create new user profile in Firestore
+      const newUserData: Partial<User> = {
+        id: firebaseUser.uid,
+        username: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
+        email: firebaseUser.email || '',
+        role: 'USER',
+        avatar: firebaseUser.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${firebaseUser.email}`,
+        createdAt: new Date(),
+        isActive: true,
+      };
+
+      await setDoc(doc(db, 'users', firebaseUser.uid), newUserData);
+      console.log('New user profile created:', firebaseUser.uid);
+      return newUserData as User;
+    }
+
+    console.log('User profile found:', firebaseUser.uid);
+    return userDoc.data() as User;
+  } catch (error: any) {
+    console.error('Google sign-in error:', error);
+    throw new Error(error.message || 'Google sign-in failed');
   }
 }

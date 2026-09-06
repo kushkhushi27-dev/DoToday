@@ -1,4 +1,4 @@
-// TaskFlow Client Scripts
+// DoToday Client Scripts
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-dismiss alerts after 4 seconds
     const alerts = document.querySelectorAll('.auto-dismiss-alert');

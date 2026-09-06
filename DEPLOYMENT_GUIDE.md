@@ -1,13 +1,24 @@
-# TaskFlow Deployment Guide
+# DoToday Deployment Guide
 
 ## Quick Start - Deploy to Vercel in 5 Minutes
 
 ### Step 1: Create Firebase Project (2 min)
 1. Go to [firebase.google.com](https://firebase.google.com)
-2. Click "Get Started" → Create Project (name: TaskFlow)
-3. Enable Firestore Database (Test Mode, region: us-east1)
-4. Enable Authentication (Email/Password)
-5. Get Web App credentials from Project Settings
+2. Click "Get Started" → Create Project (name: DoToday)
+3. Enable Firestore Database:
+   - Click "Firestore Database"
+   - Create database in **Test Mode** (development only!)
+   - Select region: `us-east1`
+4. Enable Google Authentication:
+   - Go to "Authentication" → "Sign-in method"
+   - Click "Google"
+   - Click "Enable"
+   - Enter your support email
+   - Click "Save"
+5. Get Web App credentials:
+   - Project Settings ⚙️ → "General"
+   - Scroll to "Your apps" → Click Web (`</>`)
+   - Copy the firebaseConfig object
 
 ### Step 2: Prepare Environment Variables (1 min)
 ```
@@ -26,7 +37,7 @@ VITE_FIREBASE_APP_ID=...
 4. Add environment variables from Step 2
 5. Click "Deploy"
 
-**Live at**: `https://taskflow-{username}.vercel.app` ✨
+**Live at**: `https://dotoday-{username}.vercel.app` ✨
 
 ---
 
@@ -127,7 +138,7 @@ git push origin main
 # 3. Add environment variables
 # 4. Deploy button → Done!
 
-# Your app is live at: https://taskflow-{username}.vercel.app
+# Your app is live at: https://dotoday-{username}.vercel.app
 ```
 
 #### Option 2: Firebase Hosting
@@ -147,7 +158,7 @@ npm run build
 # 5. Deploy
 firebase deploy
 
-# Your app is live at: https://taskflow-{projectId}.firebaseapp.com
+# Your app is live at: https://dotoday-{projectId}.firebaseapp.com
 ```
 
 #### Option 3: Render (Alternative)

@@ -11,10 +11,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.taskflow</groupId>
-    <artifactId>taskflow</artifactId>
+    <groupId>com.dotoday</groupId>
+    <artifactId>dotoday</artifactId>
     <version>1.0.0</version>
-    <name>TaskFlow</name>
+    <name>DoToday</name>
     <description>Collaborative Task Management Application</description>
 
     <properties>
@@ -97,7 +97,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.taskflow.TaskFlowApplication</mainClass>
+                    <mainClass>com.dotoday.DoTodayApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

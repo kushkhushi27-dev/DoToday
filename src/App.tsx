@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
+import { LoginView } from './components/LoginView';
 import { DashboardView } from './components/DashboardView';
 import { TaskList } from './components/TaskList';
 import { KanbanBoard } from './components/KanbanBoard';
@@ -14,6 +15,7 @@ import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { ArchitectureModal } from './components/ArchitectureModal';
 import { SettingsModal } from './components/SettingsModal';
 import { HelpModal } from './components/HelpModal';
+import { onAuthChange, getCurrentUser, getUserProfile } from './services/authService';
 import {
   INITIAL_USERS,
   INITIAL_PROJECTS,
@@ -24,9 +26,14 @@ import {
 import { User, Project, Task, TaskComment, ActivityLog, TaskStatus, NavTab } from './types';
 
 export default function App() {
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  // App State
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [users] = useState<User[]>(INITIAL_USERS);
-  const [currentUser, setCurrentUser] = useState<User>(INITIAL_USERS[0]); // Default to Alex Vance (Admin)
   const [projects, setProjects] = useState<Project[]>(INITIAL_PROJECTS);
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
   const [comments, setComments] = useState<TaskComment[]>(INITIAL_COMMENTS);
@@ -41,7 +48,7 @@ export default function App() {
   // Theme State - STRICTLY DEFAULT TO LIGHT MODE
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('taskflow_theme');
+      const saved = localStorage.getItem('dotoday_theme');
       if (saved === 'dark') return true;
       return false; // Default to Light Mode
     }
@@ -65,12 +72,54 @@ export default function App() {
     const root = document.documentElement;
     if (isDarkMode) {
       root.classList.add('dark');
-      localStorage.setItem('taskflow_theme', 'dark');
+      localStorage.setItem('dotoday_theme', 'dark');
     } else {
       root.classList.remove('dark');
-      localStorage.setItem('taskflow_theme', 'light');
+      localStorage.setItem('dotoday_theme', 'light');
     }
   }, [isDarkMode]);
+
+  // Firebase Authentication Effect
+  useEffect(() => {
+    console.log('[Auth] Setting up auth listener');
+    const unsubscribe = onAuthChange(async (firebaseUser) => {
+      console.log('[Auth] Auth state changed:', firebaseUser?.email);
+      try {
+        if (firebaseUser) {
+          try {
+            console.log('[Auth] Fetching user profile for:', firebaseUser.uid);
+            const userProfile = await getUserProfile(firebaseUser.uid);
+            console.log('[Auth] User profile fetched:', userProfile?.id);
+            if (userProfile) {
+              console.log('[Auth] Setting user and authenticated');
+              setCurrentUser(userProfile);
+              setIsAuthenticated(true);
+            } else {
+              console.warn('[Auth] User profile is null');
+              setIsAuthenticated(false);
+              setCurrentUser(null);
+            }
+          } catch (error) {
+            console.error('[Auth] Failed to load user profile:', error);
+            setIsAuthenticated(false);
+            setCurrentUser(null);
+          }
+        } else {
+          console.log('[Auth] No Firebase user, clearing auth state');
+          setIsAuthenticated(false);
+          setCurrentUser(null);
+        }
+      } finally {
+        console.log('[Auth] Setting authLoading to false');
+        setAuthLoading(false);
+      }
+    });
+
+    return () => {
+      console.log('[Auth] Cleaning up auth listener');
+      unsubscribe();
+    };
+  }, []);
 
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => !prev);
@@ -367,6 +416,23 @@ export default function App() {
       t.category.toLowerCase().includes(q)
     );
   });
+
+  // Show loading state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-sky-500 border-t-sky-200 rounded-full animate-spin mb-4"></div>
+          <p className="text-slate-300">Loading DoToday...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login if not authenticated
+  if (!isAuthenticated || !currentUser) {
+    return <LoginView />;
+  }
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 font-sans antialiased selection:bg-sky-100 selection:text-sky-900">

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/main :: layout(~{::title}, ~{::#content})}">
 <head>
-    <title>Tasks - TaskFlow</title>
+    <title>Tasks - DoToday</title>
 </head>
 <body>
     <div id="content" class="space-y-6">
@@ -38,7 +38,7 @@
                 <div>
                     <select name="status" class="w-full py-1.5 px-2.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white">
                         <option value="">All Statuses</option>
-                        <option th:each="st : ${T(com.taskflow.entity.TaskStatus).values()}"
+                        <option th:each="st : ${T(com.dotoday.entity.TaskStatus).values()}"
                                 th:value="${st}"
                                 th:text="${st.displayName}"
                                 th:selected="${selectedStatus == st}">To Do</option>
@@ -49,7 +49,7 @@
                 <div>
                     <select name="priority" class="w-full py-1.5 px-2.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white">
                         <option value="">All Priorities</option>
-                        <option th:each="p : ${T(com.taskflow.entity.TaskPriority).values()}"
+                        <option th:each="p : ${T(com.dotoday.entity.TaskPriority).values()}"
                                 th:value="${p}"
                                 th:text="${p.displayName}"
                                 th:selected="${selectedPriority == p}">High</option>

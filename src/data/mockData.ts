@@ -4,7 +4,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 1,
     username: 'admin',
-    email: 'alex@taskflow.com',
+    email: 'alex@dotoday.com',
     fullName: 'Alex Vance',
     avatarColor: '#0284C7', // Sky blue
     initials: 'AV',
@@ -15,7 +15,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 2,
     username: 'john_dev',
-    email: 'john@taskflow.com',
+    email: 'john@dotoday.com',
     fullName: 'John Doe',
     avatarColor: '#059669', // Mint / Emerald
     initials: 'JD',
@@ -25,7 +25,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 3,
     username: 'sarah_pm',
-    email: 'sarah@taskflow.com',
+    email: 'sarah@dotoday.com',
     fullName: 'Sarah Jenkins',
     avatarColor: '#EA580C', // Warm orange
     initials: 'SJ',
@@ -35,7 +35,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 4,
     username: 'david_qa',
-    email: 'david@taskflow.com',
+    email: 'david@dotoday.com',
     fullName: 'David Smith',
     avatarColor: '#0891B2', // Cyan
     initials: 'DS',

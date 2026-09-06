@@ -1,4 +1,4 @@
-# TaskFlow - Collaborative Task Management System
+# DoToday - Collaborative Task Management System
 
 A production-grade, full-stack collaborative task management application built with **React 19**, **TypeScript**, **Vite**, **Firebase/Firestore**, **Firebase Authentication**, and **Vercel** for serverless deployment.
 
@@ -93,16 +93,20 @@ src/
 
 ---
 
-## 🔑 Pre-seeded Demo Accounts
+## 🔑 Authentication
 
-For local development, demo accounts are created automatically. For production, users register via the signup form.
+**DoToday uses Firebase Google Authentication - no demo accounts are available.**
 
-| Role | Email | Password |
-|---|---|---|
-| **Administrator** | `admin@taskflow.com` | `Admin@123` |
-| **Backend Engineer** | `john@taskflow.com` | `User@123` |
-| **Product Manager** | `sarah@taskflow.com` | `User@123` |
-| **Quality Analyst** | `david@taskflow.com` | `User@123` |
+Users must:
+1. Sign up with their Google account
+2. Complete Firebase authentication
+3. Access the app with their authenticated Google account
+
+This provides:
+- ✅ Secure OAuth 2.0 authentication via Google
+- ✅ No password storage or management required
+- ✅ Automatic user profile creation on first login
+- ✅ Session persistence via Firebase
 
 ---
 
@@ -115,39 +119,53 @@ For local development, demo accounts are created automatically. For production, 
 - npm or yarn
 - Firebase account (free tier available at [firebase.google.com](https://firebase.google.com))
 
-#### 2. Firebase Project Setup
+#### 2. Firebase Project Setup with Google Auth
 
 1. **Create a Firebase Project**:
-   - Go to [Google Cloud Console](https://console.firebase.google.com)
-   - Click "Create Project" and name it "TaskFlow"
+   - Go to [firebase.google.com](https://firebase.google.com)
+   - Click "Create Project" and name it "DoToday"
+   - Enable Google Analytics (optional)
 
 2. **Enable Firestore Database**:
-   - In Firebase Console, select "Firestore Database"
+   - In Firebase Console → "Firestore Database"
    - Click "Create database"
-   - Start in **Test Mode** (for development only)
+   - Start in **Test Mode** (for development)
    - Select a region (e.g., `us-east1`)
+   - Click "Enable"
 
-3. **Enable Authentication**:
+3. **Enable Google Authentication**:
    - Go to "Authentication" → "Sign-in method"
-   - Enable **Email/Password**
+   - Click "Google"
+   - Click "Enable"
+   - Fill in **Project support email** (required)
+   - Click "Save"
 
-4. **Get Project Credentials**:
+4. **Get Firebase Web App Credentials**:
    - Go to Project Settings ⚙️ → "General"
-   - Scroll to "Your apps" and click the Web (`</>`) option
+   - Scroll down to "Your apps"
+   - Click "Web" (`</>`)
    - Copy your config object
+
+5. **Firestore Security Rules** (Important!):
+   - Go to Firestore Database → "Rules"
+   - The app includes security rules in `firestore.rules`
+   - For production, update to Production Mode rules
+   - For development, you can use Test Mode (less restrictive)
 
 #### 3. Environment Variables
 
-Create a `.env.local` file in the project root:
+Create a `.env.local` file in the project root (copy from `.env.example`):
 
 ```bash
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_API_KEY=YOUR_API_KEY
+VITE_FIREBASE_AUTH_DOMAIN=YOUR_AUTH_DOMAIN
+VITE_FIREBASE_PROJECT_ID=YOUR_PROJECT_ID
+VITE_FIREBASE_STORAGE_BUCKET=YOUR_STORAGE_BUCKET
+VITE_FIREBASE_MESSAGING_SENDER_ID=YOUR_SENDER_ID
+VITE_FIREBASE_APP_ID=YOUR_APP_ID
 ```
+
+Find these values in Firebase Console → Project Settings → Web App section.
 
 #### 4. Install Dependencies & Run
 
@@ -174,7 +192,7 @@ npm run preview
 1. Push your code to GitHub
 2. Go to [vercel.com](https://vercel.com) and sign up/login
 3. Click "New Project" → "Import Git Repository"
-4. Select your TaskFlow repository
+3. Select your DoToday repository
 
 #### 2. Set Environment Variables in Vercel
 
@@ -190,7 +208,7 @@ npm run preview
 #### 3. Deploy
 
 - Vercel automatically deploys on every git push
-- Your app will be live at: `https://taskflow-{your-account}.vercel.app`
+- Your app will be live at: `https://dotoday-{your-account}.vercel.app`
 
 ---
 

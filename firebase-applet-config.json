@@ -1,0 +1,10 @@
+{
+  "apiKey": "",
+  "authDomain": "dotoday-app.firebaseapp.com",
+  "projectId": "dotoday-app",
+  "storageBucket": "dotoday-app.appspot.com",
+  "messagingSenderId": "123456789012",
+  "appId": "1:123456789012:web:abcdef1234567890abcdef",
+  "measurementId": "G-XXXXXXXXXX",
+  "firestoreDatabaseId": "(default)"
+}
