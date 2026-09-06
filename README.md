@@ -1,8 +1,8 @@
 # TaskFlow - Collaborative Task Management System
 
-A production-grade, full-stack collaborative task management application built with **Java 17**, **Spring Boot 3**, **Spring Security**, **Spring Data JPA / Hibernate**, **MariaDB / MySQL**, and **Thymeleaf**.
+A production-grade, full-stack collaborative task management application built with **React 19**, **TypeScript**, **Vite**, **Firebase/Firestore**, **Firebase Authentication**, and **Vercel** for serverless deployment.
 
-Designed with clean layered software architecture, enterprise security patterns, robust exception handling, and comprehensive automated test suites.
+Designed with clean component architecture, real-time database updates, modern security patterns (Firebase Auth), and optimized for rapid deployment to Vercel & Render.
 
 ---
 
@@ -103,6 +103,166 @@ For local development, demo accounts are created automatically. For production, 
 | **Backend Engineer** | `john@taskflow.com` | `User@123` |
 | **Product Manager** | `sarah@taskflow.com` | `User@123` |
 | **Quality Analyst** | `david@taskflow.com` | `User@123` |
+
+---
+
+## ⚡ Setup & Run Instructions
+
+### Local Development
+
+#### 1. Prerequisites
+- Node.js 18+
+- npm or yarn
+- Firebase account (free tier available at [firebase.google.com](https://firebase.google.com))
+
+#### 2. Firebase Project Setup
+
+1. **Create a Firebase Project**:
+   - Go to [Google Cloud Console](https://console.firebase.google.com)
+   - Click "Create Project" and name it "TaskFlow"
+
+2. **Enable Firestore Database**:
+   - In Firebase Console, select "Firestore Database"
+   - Click "Create database"
+   - Start in **Test Mode** (for development only)
+   - Select a region (e.g., `us-east1`)
+
+3. **Enable Authentication**:
+   - Go to "Authentication" → "Sign-in method"
+   - Enable **Email/Password**
+
+4. **Get Project Credentials**:
+   - Go to Project Settings ⚙️ → "General"
+   - Scroll to "Your apps" and click the Web (`</>`) option
+   - Copy your config object
+
+#### 3. Environment Variables
+
+Create a `.env.local` file in the project root:
+
+```bash
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+#### 4. Install Dependencies & Run
+
+```bash
+# Install npm dependencies
+npm install
+
+# Start development server (runs on http://localhost:5173)
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+---
+
+### Deployment to Vercel
+
+#### 1. Connect GitHub Repository
+
+1. Push your code to GitHub
+2. Go to [vercel.com](https://vercel.com) and sign up/login
+3. Click "New Project" → "Import Git Repository"
+4. Select your TaskFlow repository
+
+#### 2. Set Environment Variables in Vercel
+
+1. In Vercel Project Settings → "Environment Variables"
+2. Add all Firebase credentials:
+   - `VITE_FIREBASE_API_KEY`
+   - `VITE_FIREBASE_AUTH_DOMAIN`
+   - `VITE_FIREBASE_PROJECT_ID`
+   - `VITE_FIREBASE_STORAGE_BUCKET`
+   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+   - `VITE_FIREBASE_APP_ID`
+
+#### 3. Deploy
+
+- Vercel automatically deploys on every git push
+- Your app will be live at: `https://taskflow-{your-account}.vercel.app`
+
+---
+
+### Alternative: Deploy to Render or Firebase Hosting
+
+#### Firebase Hosting
+
+```bash
+# Install Firebase CLI
+npm install -g firebase-tools
+
+# Login to Firebase
+firebase login
+
+# Initialize Firebase
+firebase init
+
+# Deploy
+firebase deploy
+```
+
+#### Render
+
+1. Create account at [render.com](https://render.com)
+2. Connect GitHub repo
+3. Create "Static Site" service
+4. Set build command: `npm run build`
+5. Set publish directory: `dist`
+6. Add environment variables
+7. Deploy
+
+---
+
+## 🔐 Firestore Security Rules
+
+The project includes `firestore.rules` with security rules:
+- Users can only access/modify their own data
+- Projects require member authorization
+- Tasks are protected with creator/assignee checks
+- Comments are read-only for non-authors
+
+**Deploy rules to production:**
+
+```bash
+firebase deploy --only firestore:rules
+```
+
+---
+
+## 📝 Key Differences from Spring Boot Version
+
+| Aspect | Spring Boot | Firebase/Vercel |
+|---|---|---|
+| **Backend** | Java server | Serverless functions |
+| **Database** | MySQL/MariaDB | Firestore (NoSQL) |
+| **Deployment** | Render + Backend setup | Vercel (fronted) + Firebase (backend) |
+| **Authentication** | Spring Security | Firebase Auth |
+| **Cost** | Server rental | Pay-per-use (usually free tier covers demo) |
+| **Scalability** | Manual | Auto-scaling |
+
+---
+
+## 🚀 Production Checklist
+
+- [ ] Enable Firebase security rules (move to Production mode)
+- [ ] Set up Firebase backup & restore
+- [ ] Configure domain name
+- [ ] Enable HTTPS (automatic on Vercel & Firebase)
+- [ ] Set up monitoring & alerts
+- [ ] Configure email verification
+- [ ] Add password reset flow
+- [ ] Implement activity logging
 
 ---
 
