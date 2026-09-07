@@ -65,8 +65,12 @@ export const Header: React.FC<HeaderProps> = ({
     };
 
     const handleMobileToggle = () => {
-        if (onOpenSidebarMobile) onOpenSidebarMobile();
-        if (onToggleMobileMenu) onToggleMobileMenu();
+        // Only call toggle — calling both open+toggle at once would cancel each other out
+        if (onToggleMobileMenu) {
+            onToggleMobileMenu();
+        } else if (onOpenSidebarMobile) {
+            onOpenSidebarMobile();
+        }
     };
 
     // Close dropdowns on outside click

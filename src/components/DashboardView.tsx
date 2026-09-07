@@ -54,7 +54,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [calendarMonth, setCalendarMonth] = useState<'AUG' | 'SEP' | 'OCT'>('SEP');
   const [selectedDay, setSelectedDay] = useState<number | null>(5); // Default to Today (Sept 5)
 
-  const todayStr = '2026-09-05';
+  // Use real current date for comparisons
+  const todayDate = new Date();
+  const todayStr = todayDate.toISOString().split('T')[0]; // e.g. '2026-09-07'
+  const tomorrowStr = new Date(todayDate.getTime() + 86400000).toISOString().split('T')[0];
   const firstName = currentUser.fullName.split(' ')[0] || 'Alex';
 
   // Metrics
@@ -129,11 +132,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   // Format relative date display
   const formatDeadlineDate = (dueDate: string) => {
-    if (dueDate === '2026-09-05') return 'Today';
-    if (dueDate === '2026-09-06') return 'Tomorrow';
-    if (dueDate === '2026-09-08') return '8 Sep';
-    if (dueDate === '2026-09-10') return '10 Sep';
-    if (dueDate === '2026-09-12') return '12 Sep';
+    if (dueDate === todayStr) return 'Today';
+    if (dueDate === tomorrowStr) return 'Tomorrow';
     if (dueDate < todayStr) return 'Overdue';
     const parts = dueDate.split('-');
     if (parts.length === 3) {
@@ -946,82 +946,59 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           <div className="space-y-3">
-            {[
-              {
-                id: 1,
-                title: 'Submit DSA Assignment',
-                project: 'DSA Practice',
-                due: 'Today',
-                isRed: true,
-                priority: 'High',
-                dotColor: 'bg-rose-400',
-                priorityClass: 'bg-rose-50 text-rose-500'
-              },
-              {
-                id: 2,
-                title: 'Design Project UI',
-                project: 'Web Dev',
-                due: 'Tomorrow',
-                isOrange: true,
-                priority: 'Medium',
-                dotColor: 'bg-amber-400',
-                priorityClass: 'bg-amber-50 text-amber-500'
-              },
-              {
-                id: 3,
-                title: 'Prepare Presentation',
-                project: 'College',
-                due: '8 Sep',
-                priority: 'Medium',
-                dotColor: 'bg-amber-400',
-                priorityClass: 'bg-amber-50 text-amber-500'
-              },
-              {
-                id: 4,
-                title: 'Read Research Paper',
-                project: 'ML Project',
-                due: '10 Sep',
-                priority: 'Low',
-                dotColor: 'bg-sky-400',
-                priorityClass: 'bg-sky-50 text-sky-500'
-              }
-            ].map((item) => {
-              const matchedTask = tasks.find((t) => t.id === item.id);
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    if (matchedTask) onOpenTaskDetail(matchedTask);
-                  }}
-                  className="flex items-center justify-between gap-3 p-1 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
-                >
-                  <div className="flex items-start space-x-2.5 min-w-0 flex-1">
-                    <span className={`w-2 h-2 rounded-full shrink-0 mt-1 ${item.dotColor}`} />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                        {item.title}
-                      </p>
-                      <div className="flex items-center space-x-1.5 text-[11px] text-slate-400 mt-0.5">
-                        <span className="font-medium text-slate-500">{item.project}</span>
+            {upcomingTasks.length === 0 ? (
+              <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-4">
+                No upcoming deadlines. 🎉
+              </p>
+            ) : (
+              upcomingTasks.map((task) => {
+                const project = getProjectById(task.projectId);
+                const isOverdue = !!task.dueDate && task.dueDate < todayStr;
+                const dotColor = getTaskDotColor(task.priority, isOverdue);
+                const priorityClass =
+                  task.priority === 'HIGH'
+                    ? 'bg-rose-50 text-rose-500'
+                    : task.priority === 'MEDIUM'
+                    ? 'bg-amber-50 text-amber-500'
+                    : 'bg-sky-50 text-sky-500';
+                const dueLabelColor =
+                  isOverdue || formatDeadlineDate(task.dueDate!) === 'Today'
+                    ? 'text-rose-500'
+                    : formatDeadlineDate(task.dueDate!) === 'Tomorrow'
+                    ? 'text-amber-500'
+                    : 'text-slate-500';
+                return (
+                  <div
+                    key={task.id}
+                    onClick={() => onOpenTaskDetail(task)}
+                    className="flex items-center justify-between gap-3 p-1 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-start space-x-2.5 min-w-0 flex-1">
+                      <span className={`w-2 h-2 rounded-full shrink-0 mt-1 ${dotColor}`} />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                          {task.title}
+                        </p>
+                        <div className="flex items-center space-x-1.5 text-[11px] text-slate-400 mt-0.5">
+                          <span className="font-medium text-slate-500 dark:text-slate-400">
+                            {project ? project.name : task.category}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-2 shrink-0">
-                    <span
-                      className={`text-xs font-semibold ${
-                        item.isRed ? 'text-rose-500' : item.isOrange ? 'text-amber-500' : 'text-slate-500'
-                      }`}
-                    >
-                      {item.due}
-                    </span>
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${item.priorityClass}`}>
-                      {item.priority}
-                    </span>
+                    <div className="flex items-center space-x-2 shrink-0">
+                      <span className={`text-xs font-semibold ${dueLabelColor}`}>
+                        {task.dueDate ? formatDeadlineDate(task.dueDate) : '—'}
+                      </span>
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${priorityClass}`}>
+                        {task.priority === 'HIGH' ? 'High' : task.priority === 'MEDIUM' ? 'Medium' : 'Low'}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
 
